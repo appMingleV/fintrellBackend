@@ -18,7 +18,7 @@ export const addAssumption=async(req,res)=>{
         data:assumptData
        })
     }catch(err){
-        return res.status(200).json({
+        return res.status(500).json({
             success:false,
             error:err.message
         })
@@ -42,7 +42,7 @@ export const getAssumptions=async(req,res)=>{
         data:assumptData
       })
     }catch(err){
-        return res.status(200).json({
+        return res.status(500).json({
             success:false,
             error:err.message
         })
