@@ -40,7 +40,7 @@ const CostOfProjectSchema = new mongoose.Schema({
   },
   workingCapital: {
     amount: { type: Number, required: true, default: 0 },
-    rateOfDAP: { type: Number, required: true, default: 0 },
+
   },
   totalProjectCost: {
     type: Number,
