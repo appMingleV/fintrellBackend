@@ -20,8 +20,7 @@ const AssumptionSchema = new mongoose.Schema({
   },
   disbursementMonthYear: {
     type: String,
-    required: [true,], 
-    match: /^(0[1-9]|1[0-2])-\d{4}$/,
+    required: [true,"disbursement month is required"], 
   },
   disbursementYear: {
     type: Number,
