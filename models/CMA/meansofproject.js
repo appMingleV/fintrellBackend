@@ -24,4 +24,4 @@ const MeansOfFinanceSchema = new mongoose.Schema({
 
 const MeansOfFinance = mongoose.model('MeansOfFinance', MeansOfFinanceSchema);
 
-module.exports = MeansOfFinance;
+export default MeansOfFinance;

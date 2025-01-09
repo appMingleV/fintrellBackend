@@ -31,4 +31,4 @@ enterpriseId:{
 
 const FinancialData = mongoose.model('FinancialData', FinancialDataSchema);
 
-module.exports = FinancialData;
+export default  FinancialData;
