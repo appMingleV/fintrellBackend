@@ -12,7 +12,7 @@ const enterprise=new mongoose.Schema({
         required:[true,"promoters is required"]
     },
     establishment:{
-        type:Date,
+        type:String,
         required:[true,"establishment date is required"]
     },
     MSMENumber:{
