@@ -21,4 +21,29 @@ export const enterprise=async(req,res)=>{
             error:err.message
         })
     }
+    
+}
+
+
+export const getEnterprise=async(req,res)=>{
+    try{
+        const {enterpriseId}=req.params;
+      const enterDate=await Enterprise.findById(enterpriseId);
+
+      if(!enterDate){
+        return res.status(404).json({
+            success:false,
+            error: 'Enterprise not found'
+        })
+      }
+      return res.status(200).json({
+        success: true,
+        data: enterDate
+      })
+    }catch(err){
+        return res.status(500).json({
+            success:false,
+            error:err.message
+        })
+    }
 }
