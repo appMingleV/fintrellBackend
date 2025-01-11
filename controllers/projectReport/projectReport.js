@@ -1,10 +1,9 @@
 import projectRe from "../../models/projectReport/projectReport.js";
 export const projectrepoer=async(req,res)=>{
     try{
-        const {enterpriseId}=req.params;
-        const {content}=req.body;
+  
+        const {enterpriseId,content}=req.body;
         
-        console.log(req?.file?.filename);
         const projectReportContent=await projectRe.create({content,image:req?.file?.filename});
         
         if(!projectReportContent){
@@ -30,8 +29,8 @@ export const projectrepoer=async(req,res)=>{
 
 export const getProjectReport=async(req,res)=>{
     try{
-      const {id}=req.params;
-      const projectReportContent=await projectRe.findById(id);
+      const {enterpriseId}=req.params;
+      const projectReportContent=await projectRe.findById({enterpriseId});
       if(!projectReportContent){
         return res.status(404).json({
             success: false,
