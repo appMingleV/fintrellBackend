@@ -16,7 +16,8 @@ const projectReportSchema=new mongoose.Schema({
       },
       typeOfContent:{
         type:String,
-        enum:["projectOverview","objective","benefits","futureOutlook","growthandMarket","projectProponent","briefProjectDescription","needOfProject","technicalFeasibilty","strengths","Weaknesses","opportunities","threats"]
+        enum:["projectOverview","objective","benefits","futureOutlook","growthandMarket","projectProponent","briefProjectDescription","needOfProject","technicalFeasibilty","strengths","Weaknesses","opportunities","threats"],
+        required:[true,"type of content is required"]
       }
 })  
 
