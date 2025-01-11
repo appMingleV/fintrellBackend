@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { projectrepoer } from '../../controllers/projectReport/projectReport.js';
+import { projectrepoer,getProjectReport } from '../../controllers/projectReport/projectReport.js';
 const routes=Router();
 import multer from 'multer';
 
@@ -15,5 +15,6 @@ const storage = multer.diskStorage({
 
   const uploads=multer({storage});
 routes.post('/',uploads.single('image'),projectrepoer);
+routes.get('/:id',getProjectReport);
   
 export default routes;
