@@ -4,7 +4,7 @@ export const projectrepoer=async(req,res)=>{
         const {enterpriseId}=req.params;
         const {content}=req.body;
         
-     
+        console.log(req?.file?.filename);
         const projectReportContent=await projectRe.create({content,image:req?.file?.filename});
         
         if(!projectReportContent){
