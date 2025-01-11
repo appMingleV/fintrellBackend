@@ -21,7 +21,8 @@ export const projectrepoer=async(req,res)=>{
     }catch(err){
         return res.status(500).json({
             success:false,
-            error: 'Failed to get project report'
+            error: 'Failed to get project report',
+            message:err.message
         })
     }
 }
