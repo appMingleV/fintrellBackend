@@ -3,11 +3,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import routes from './routes/index.js';
 import { connectDB } from './config/db.js';
+import bodyParser from 'body-parser';
 dotenv.config();
 connectDB();
 const app=express();
+app.use(bodyParser.json({ limit: '50mb' }));  // Increase JSON payload size
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); 
 app.use(cors());
-app.use(express.json());
 app.use(express.static('uploads'))
 app.get('/',(req,res)=>{
     return res.status(400).json({
