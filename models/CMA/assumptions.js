@@ -22,12 +22,6 @@ const AssumptionSchema = new mongoose.Schema({
     type: String,
     required: [true,"disbursement month is required"], 
   },
-  disbursementYear: {
-    type: Number,
-    required: [true,"disbursement year is required"],
-    min: 1900,
-    max: new Date().getFullYear(),
-  },
   moratoriumPeriod: {
     type: Number,
     required: [true,"moratorium period is required"],
