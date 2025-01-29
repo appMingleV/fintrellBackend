@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import {addAssumption,getAssumptions,addCostOfProject,getCostOfProject,addMeansOfFinance,getMeansOfFinance,addFinancialData,getFinancialData} from '../../controllers/CMA/assumptions.js'
-
+import {depCalc} from '../../controllers/CMA/calculation.js'
 const router = Router();
 
 router.post('/assumption',addAssumption);
@@ -16,5 +16,7 @@ router.get('/meansOfFinance/:enterpriseId',getMeansOfFinance);
 
 router.post('/profitLoss',addFinancialData);
 router.get('/profitLoss/:enterpriseId',getFinancialData);
+
+router.get('/depreciation/:enterpriseId',depCalc)
 
 export default router;
