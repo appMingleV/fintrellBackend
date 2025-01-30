@@ -11,7 +11,7 @@ export const depCalculation=async(enterpriseId)=>{
         const response3=await axios.get(`http://46.202.164.93:7000/api/cma/costOfProject/${enterpriseId}`)
      
         const array= calulateDep(response1?.data?.data?.tenure,response2?.data?.data?.disbursementMonthYear,response3?.data?.data);
-       
+       console.log(array);
         return array;
     }catch(err){
      console.error(err);

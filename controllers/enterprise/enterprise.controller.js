@@ -2,6 +2,7 @@
 import Enterprise from "../../models/enterprise/enterprise.js";
 export const enterprise=async(req,res)=>{
     try{
+    
     const enterData={...req.body};
 
     if(!enterData.id){
@@ -11,26 +12,31 @@ export const enterprise=async(req,res)=>{
             success:false,
             error: 'Failed to create enterprise'
         })
+         
     }
     res.status(201).json({
         success: true,
         data: newEnterprise
     })
-}else{
-    
-    const updatedEnterprise=await Enterprise.findByIdAndUpdate(enterData.id,enterData,{new:true});
-    if(!updatedEnterprise){
-        return res.status(404).json({
-            success:false,
-            error: 'Enterprise not found'
-        })
+}else if(enterData.id){
+           const id=enterData.id;
+           delete enterData.id
+           const updatedEnterprise=await Enterprise.findByIdAndUpdate(id,enterData,{new:true});
+            if(!updatedEnterprise){
+                return res.status(404).json({
+                    success:false,
+                    error: 'Enterprise not found'
+                })
+            }
+            return res.status(200).json({
+                success: true,
+                message:"Enterprise successfully Updated ",
+                data: updatedEnterprise
+            })
     }
-    return res.status(200).json({
-        success: true,
-        data: updatedEnterprise
-    })
-}
-    }catch(err){
+   
+
+}catch(err){
         return res.status(500).json({
             success:false,
             error:err.message

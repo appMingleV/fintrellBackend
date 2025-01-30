@@ -39,10 +39,12 @@ export const getProjectReport=async(req,res)=>{
     try{
       const {enterpriseId}=req.params;
       const {typeOfContent}=req.body;
-       if(!typeOfContent)return res.status(400).json({
+   
+       if(!typeOfContent && !enterpriseId)return res.status(400).json({
         success: false,
-        error: 'content type is required'
+        error: 'worng details get'
        })
+      
       const enterpriseDetails=await Enterprise.findById(enterpriseId);
       if(!enterpriseDetails){
           return res.status(400).json({
