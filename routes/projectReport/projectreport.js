@@ -15,6 +15,6 @@ const storage = multer.diskStorage({
 
   const uploads=multer({storage});
 routes.post('/',uploads.single('image'),projectrepoer);
-routes.get('/:enterpriseId',getProjectReport);
+routes.get('/:enterpriseId/:typeOfContent',getProjectReport);
   
 export default routes;

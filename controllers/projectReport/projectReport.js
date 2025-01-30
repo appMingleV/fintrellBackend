@@ -37,8 +37,8 @@ export const projectrepoer=async(req,res)=>{
 
 export const getProjectReport=async(req,res)=>{
     try{
-      const {enterpriseId}=req.params;
-      const {typeOfContent}=req.body;
+      const {enterpriseId,typeOfContent}=req.params;
+      
    
        if(!typeOfContent && !enterpriseId)return res.status(400).json({
         success: false,
