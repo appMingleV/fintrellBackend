@@ -5,7 +5,7 @@ import projectReport from './projectReport/projectreport.js';
 const router = Router();
 
 router.post('/enterprise',enterprise);
-router.get('/c/:enterpriseId',getEnterprise)
+router.get('/enterprise/:enterpriseId',getEnterprise)
 router.use('/cma',cma)
 router.use('/prjectreport',projectReport)
 export default router;
