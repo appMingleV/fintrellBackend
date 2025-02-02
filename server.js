@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.static('uploads'))
 app.get('/',(req,res)=>{
     return res.status(400).json({
-        status:false,
+        status:true,
         message:'Welcome to the API'
     })
 })

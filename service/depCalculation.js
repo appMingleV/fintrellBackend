@@ -1,20 +1,18 @@
 import axios from "axios"
 export const depCalculation=async(enterpriseId)=>{
-    console.log(enterpriseId)
+
     try{ 
         const response1=await axios.get(`http://46.202.164.93:7000/api/enterprise/${enterpriseId}`)
-        
-      
         const response2=await axios.get(`http://46.202.164.93:7000/api/cma/assumption/${enterpriseId}`)
-     
-
         const response3=await axios.get(`http://46.202.164.93:7000/api/cma/costOfProject/${enterpriseId}`)
-     
+        
         const array= calulateDep(response1?.data?.data?.tenure,response2?.data?.data?.disbursementMonthYear,response3?.data?.data);
        console.log(array);
         return array;
     }catch(err){
-     console.error(err);
+ 
+    
+     return undefined;
     }
 }
 
