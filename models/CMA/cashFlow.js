@@ -54,6 +54,12 @@ const cashFlowSchema = new mongoose.Schema({
   netIncreaseInCashEquivalents: { type: Number, required: true },
   cashEquivalentsAtBeginning: { type: Number, required: true },
   cashEquivalentsAtEnd: { type: Number, required: true },
+  netIncreaseInCashEquivalentSAtEnd:{
+    type:Number,
+    default:function(){
+      return  this.cashEquivalentsAtBeginning+ this.cashEquivalentsAtEnd;
+    }
+  }                                                         
 });
 
 const CashFlow = mongoose.model("CashFlow", cashFlowSchema);
