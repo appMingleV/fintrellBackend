@@ -24,7 +24,7 @@ export default async function EMICalculation(enterpriseId){
     }
 
 
-    const Repayment=(termLoan/tenure);
+    const Repayment=+(termLoan/tenure).toFixed(2);
     let arraydata=calculate(Repayment,tenure,distbur,termLoan,roi);
     return arraydata;
     }catch(err){
