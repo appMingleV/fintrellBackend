@@ -11,5 +11,9 @@ router.get('/balanceSheet/:enterpriseId',getBalanceSheet);
 router.post('/currentRatio/:enterpriseId',currentRatio);
 router.get('/currentRatio/:enterpriseId',getCurrentRatio);
 
+//sensitivity -->
+router.post('/sensitivity/:enterpriseId',getCurrentRatio);
+router.get('/sensitivity/:enterpriseId',getCurrentRatio);
+
 
 export default router;

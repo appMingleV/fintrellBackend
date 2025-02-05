@@ -10,7 +10,7 @@ const breakEvenPointSchema=new mongoose.Schema({
     grossRevenue:{
         type:Number,
         required:[true,"Enter the value of gross revenue"]
-    },
+    }, 
     variableExpeses:{
         Purchases:{type:Number,required:[true,"Enter the value of purchase"]},
         labourTransport:{type:Number,required:[true,"Enter the value of labour and transport"]},

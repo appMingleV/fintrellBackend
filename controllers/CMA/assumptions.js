@@ -7,21 +7,41 @@ import IndirectExpenses from "../../models/CMA/indrectExpensses.js";
 import CashFlow from "../../models/CMA/cashFlow.js";
 import BalanceSheet from "../../models/CMA/balanceSheet.js";
 import CurrentRatio from "../../models/CMA/currentRatio.js";
+import sensitive from "../../models/CMA/sensitivity.js";
 export const addAssumption=async(req,res)=>{
     try{
+       const {enterpriseId}=req.body; 
        const assumptiObj={...req.body};
        console.log(assumptiObj)
-       const assumptData=await assumption.create(assumptiObj)
+
+       const assumptData=await assumption.findOne({enterpriseId})
+       
        if(!assumptData){
-        return res.status(400).json({
-            success:false,
-            error: 'Failed to create assumption'
-        })
-       }
-       return  res.status(200).json({
-        success:true,
-        data:assumptData
-       })
+         const newDataAssumption=await assumption.create({...assumptiObj});
+         if(!newDataAssumption){
+             return res.status(500).json({
+                 success: false,
+                 error: 'Failed to create assumption'
+             })
+         }
+         return  res.status(200).json({
+             success: true,
+             data: newDataAssumption
+         })
+       }else{
+          const updateAssumption=await assumption.findOneAndUpdate({enterpriseId},{...assumptiObj},{new:true});
+          if(!updateAssumption){
+            return res.status(500).json({
+                success: false,
+                error: 'Failed to update assumption'
+            })
+          }
+          return res.status(200).json({
+            success: true,
+            message: "Assumption successfully updated",
+            data: updateAssumption
+          });
+    }
     }catch(err){
         return res.status(500).json({
             success:false,
@@ -56,21 +76,41 @@ export const getAssumptions=async(req,res)=>{
 
 export const addCostOfProject = async (req, res) => {
     try {
+        const {enterpriseId}=req.body;
         const costObj = { ...req.body };
 
-        const costData = await costOfProject.create(costObj);
+        const costData = await costOfProject.findOne({enterpriseId});
+
 
         if (!costData) {
-            return res.status(400).json({
-                success: false,
-                error: 'Failed to create Cost of Project'
-            });
+           const addCostOfProject=await costOfProject.create({...costObj});
+           if(!addCostOfProject){
+             return res.status(500).json({
+                 success: false,
+                 error: 'Failed to create Cost of Project'
+             });
+           }
+           return res.status(200).json({
+             success: true,
+             data: addCostOfProject
+           });
+        }else{
+
+         const updateCostOfProject = await costOfProject.findOneAndUpdate({enterpriseId},{...costObj},{new:true});
+         if(!updateCostOfProject){
+             return res.status(500).json({
+                 success: false,
+                 error: 'Failed to update Cost of Project'
+             });
+         }
+         return res.status(200).json({
+             success: true,
+             message: "Cost of Project successfully updated",
+             data: updateCostOfProject
+         });
         }
 
-        return res.status(200).json({
-            success: true,
-            data: costData
-        });
+      
     } catch (err) {
         return res.status(500).json({
             success: false,
@@ -107,15 +147,37 @@ export const getCostOfProject = async (req, res) => {
 
 export const addMeansOfFinance = async (req, res) => {
     try {
+        const {enterpriseId}=req.body;
         const meansOfFinanceObj = { ...req.body };
         console.log(meansOfFinanceObj);
 
-        const meansData = await MeansOfFinance.create(meansOfFinanceObj);
+        const meansData = await MeansOfFinance.findOne({enterpriseId});
+        
 
         if (!meansData) {
-            return res.status(400).json({
-                success: false,
-                error: 'Failed to create Means of Finance record'
+            const newDataMeansOfFinance=await MeansOfFinance.create({...meansOfFinanceObj});
+            if(!newDataMeansOfFinance){
+                return res.status(500).json({
+                    success: false,
+                    error: 'Failed to create Means of Finance record'
+                })
+            }
+            return  res.status(200).json({
+                success: true,
+                data: newDataMeansOfFinance
+            })
+        }else{
+            const updateMeansOfFinance=await MeansOfFinance.findOneAndUpdate({enterpriseId},{...meansOfFinanceObj},{new:true});
+            if(!updateMeansOfFinance){
+                return res.status(500).json({
+                    success: false,
+                    error: 'Failed to update Means of Finance'
+                })
+            }
+            return res.status(200).json({
+                success: true,
+                message: "Means of Finance successfully updated",
+                data: updateMeansOfFinance
             });
         }
 
@@ -162,10 +224,37 @@ export const getMeansOfFinance = async (req, res) => {
 
 export const addFinancialData = async (req, res) => {
     try {
+        const {enterpriseId}=req.body;
         const financialDataObj = { ...req.body };
         console.log(financialDataObj);
 
-        const financialData = await FinancialData.create(financialDataObj);
+        const financialData = await FinancialData.findOne({enterpriseId});
+        if(!financialData){
+            const newDataFinancialData=await FinancialData.create({...financialDataObj});
+            if(!newDataFinancialData){
+                return res.status(500).json({
+                    success: false,
+                    error: 'Failed to create financial data record'
+                })
+            }
+            return  res.status(200).json({
+                success: true,
+                data: newDataFinancialData
+            })
+        }else{
+            const updateFinancialData=await FinancialData.findOneAndUpdate({enterpriseId},{...financialDataObj},{new:true});
+            if(!updateFinancialData){
+                return res.status(500).json({
+                    success: false,
+                    error: 'Failed to update financial data'
+                })
+            }
+            return res.status(200).json({
+                success: true,
+                message: "Financial data successfully updated",
+                data: updateFinancialData
+            });
+        }
 
         if (!financialData) {
             return res.status(400).json({
@@ -252,7 +341,8 @@ export const breakEvenPoint=async(req,res)=>{
        }catch(err){
         return res.status(500).json({
             success: false,
-            error: 'Failed to calculate break even point'
+            error: 'Failed to calculate break even point',
+            message:err.message
         })
        }
 }
@@ -577,4 +667,73 @@ export const getCurrentRatio =async(req,res)=>{
                 error: err.message
             })
         }
+}
+
+export const sensitiveAnalysis=async(req,res)=>{
+          try{
+            const enterpriseId=req.params;
+            const objectData=req.body;
+            const sensitiveAnalysisData=await sensitive.findOne({enterpriseId});
+            if(!sensitiveAnalysisData){
+                const newDataSensitiveAnalysis=await sensitive.create({enterpriseId,...objectData});
+                if(!newDataSensitiveAnalysis){
+                    return res.status(500).json({
+                        status: false,
+                        message: 'Failed to create sensitive analysis',
+                        error:err.message
+                    })
+                }
+                return res.status(200).json({
+                    success: true,
+                    message:"Sensitive analysis created successfully",
+                    data: newDataSensitiveAnalysis
+                })
+            }else{
+                const updatedSensitiveAnalysis=await sensitive.findOneAndUpdate({enterpriseId},{...objectData}, {new: true});
+                if(!updatedSensitiveAnalysis){
+                    return res.status(500).json({
+                        status: false,
+                        message: 'Failed to update sensitive analysis',
+                        error:err.message
+                    })
+                }
+                return res.status(200).json({
+                    success: true,
+                    message:"Sensitive analysis successfully updated",
+                    data: updatedSensitiveAnalysis
+                })
+            }
+          }catch(err){
+             return res.status(500).json({
+                 success: false,
+                 message: 'Failed to perform sensitive analysis',
+                 error: err.message
+             })
+          }
+}
+
+
+
+export const getSensitiveAnalysis=async(req,res)=>{
+    try{
+        const {enterpriseId}=req.params;
+        const sensitiveAnalysisData=await sensitive.findOne({enterpriseId});
+        if(!sensitiveAnalysisData){
+            return res.status(200).json({
+                success: true,
+                error: 'Sensitive analysis data not found'
+            })
+        }
+        return res.status(200).json({
+            success: true,
+            message:"Sensitive analysis data successfully fetched",
+            data: sensitiveAnalysisData
+        })
+    }catch(err){
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to perform sensitive analysis',
+            error: err.message
+        })
+    }
 }

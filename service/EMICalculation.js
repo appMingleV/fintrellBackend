@@ -72,6 +72,7 @@ function calculate(Repayment,tenure,startDate,termLoan,roi){
     }
     let lengthObj=calculObj.length
     let remainingMonth=tenure-lengthObj;
+    
     console.log(remainingMonth," object ",calculObj[lengthObj-1].principleAmount);
     let pricilOutStanding=calculObj[lengthObj-1].pricipleOutstanding-Repayment;
     let  remainObj={
