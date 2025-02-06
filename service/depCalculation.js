@@ -10,20 +10,27 @@ export const depCalculation=async(enterpriseId)=>{
        console.log(array);
         return array;
     }catch(err){
- 
-    
+        console.log(err);
      return undefined;
     }
 }
 
+function calculateMont(month){
+    if(month==10 || month==11 || month==12 || month==1 || month==2 || month==3){
+        return 6;
+    } else{
+        return 12;
+    }
+}
 function calulateDep(tenure,startDate,costOfProject){
       const date=startDate.split("-");
-      let month=+date[1]<=6?6:12;
+      console.log(date);
+      let month=calculateMont(+date[1])
       const year=+date[0];  
       let duration=tenure/12;
      
       duration=duration+(month<=6?1:0);
-    
+
       const depArrays=[];
      
       let depStoreObje={
@@ -112,7 +119,7 @@ function calulateDep(tenure,startDate,costOfProject){
             let dep=calculateEachDep(amount,rate,month);
             // console.log(amount)
             // console.log("dep store ",depStoreObje[key], +" "+key);
-            // console.log("amount ",amount,"rate ",rate," dep ",dep );        
+            console.log("amount ",amount,"rate ",rate," dep ",dep );        
             newStoreObje[key].dep=dep;
             
             newStoreObje[key].depAmount=+(amount-dep).toFixed(2);
