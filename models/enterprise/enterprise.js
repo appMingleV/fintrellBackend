@@ -5,7 +5,6 @@ const enterprise=new mongoose.Schema({
     companyName:{
         type:String,
         required:[true,"companyName is required"],
-        unique:true
     },
     promoters:{
         type:[String],

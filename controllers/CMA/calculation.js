@@ -64,3 +64,4 @@ export const EMICalcu=async(req,res)=>{
         })
     }
 }
+

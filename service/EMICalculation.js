@@ -6,6 +6,7 @@ export default async function EMICalculation(enterpriseId){
     const enterprise=await axios.get(`http://46.202.164.93:7000/api/enterprise/${enterpriseId}`)
    
     const tenure=enterprise?.data?.data?.tenure;
+    console.log("tenure---> ",tenure)
     if(!tenure){
         return undefined;
     }
@@ -23,9 +24,9 @@ export default async function EMICalculation(enterpriseId){
         return undefined;
     }
 
-
     const Repayment=+(termLoan/tenure).toFixed(2);
     let arraydata=calculate(Repayment,tenure,distbur,termLoan,roi);
+
     return arraydata;
     }catch(err){
          console.log(err);
@@ -50,7 +51,6 @@ function calculate(Repayment,tenure,startDate,termLoan,roi){
         interest:interest,
         pricipleOutstanding:termLoan-Repayment
     }
-  
     while(count!=4){
         let newObje={
            principleAmount:objeStore.principleAmount,

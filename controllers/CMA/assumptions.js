@@ -8,6 +8,7 @@ import CashFlow from "../../models/CMA/cashFlow.js";
 import BalanceSheet from "../../models/CMA/balanceSheet.js";
 import CurrentRatio from "../../models/CMA/currentRatio.js";
 import sensitive from "../../models/CMA/sensitivity.js";
+import {calculateProfitLoss} from "../../service/profitLossDuration.js"
 export const addAssumption=async(req,res)=>{
     try{
        const {enterpriseId}=req.body; 
@@ -181,10 +182,7 @@ export const addMeansOfFinance = async (req, res) => {
             });
         }
 
-        return res.status(200).json({
-            success: true,
-            data: meansData
-        });
+      
     } catch (err) {
         return res.status(500).json({
             success: false,
@@ -226,9 +224,11 @@ export const addFinancialData = async (req, res) => {
     try {
         const {enterpriseId}=req.body;
         const financialDataObj = { ...req.body };
-        console.log(financialDataObj);
 
+        const finanicalCalculation=await calculateProfitLoss(enterpriseId,financialDataObj);
+        console.log(finanicalCalculation)
         const financialData = await FinancialData.findOne({enterpriseId});
+
         if(!financialData){
             const newDataFinancialData=await FinancialData.create({...financialDataObj});
             if(!newDataFinancialData){
@@ -256,17 +256,6 @@ export const addFinancialData = async (req, res) => {
             });
         }
 
-        if (!financialData) {
-            return res.status(400).json({
-                success: false,
-                error: 'Failed to create financial data record'
-            });
-        }
-
-        return res.status(200).json({
-            success: true,
-            data: financialData
-        });
     } catch (err) {
         return res.status(500).json({
             success: false,
