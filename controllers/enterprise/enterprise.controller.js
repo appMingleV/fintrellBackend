@@ -4,7 +4,7 @@ export const enterprise=async(req,res)=>{
     try{
     
     const enterData={...req.body};
-
+     
     if(!enterData.id){
     const newEnterprise=await Enterprise.create(enterData);
     if(!newEnterprise){
