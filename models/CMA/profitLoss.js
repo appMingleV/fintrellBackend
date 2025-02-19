@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const FinancialDataSchema = new mongoose.Schema({
     domesticRevenue: { type: Number, required: true }, // Domestic Revenue
     otherIncome: { type: Number, required: true },     // Other Income
-enterpriseId:{
+   enterpriseId:{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Enterprise',
     required: [true,"enterprise id is required"],
@@ -19,7 +19,7 @@ enterpriseId:{
         totalCost:{
             type:Number,
             default:function(){
-                let sum=this.openingStock+this.purchases+this.labourAndTransport+this.powerAndFuel+this.otherPriceCost+this.closingStock+this.indirectExpenses;
+                let sum=(this.openingStock+this.purchases+this.labourAndTransport+this.powerAndFuel+this.otherPriceCost+this.closingStock+this.indirectExpenses);
                 return sum;
             }
         }

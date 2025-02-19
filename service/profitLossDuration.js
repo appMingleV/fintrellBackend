@@ -4,7 +4,7 @@ export const calculateProfitLoss=async(enterpriseId,financialDataObj)=>{
     try{
         console.log("financial object  is   ",financialDataObj);
         const enterprise=await axios.get(`http://46.202.164.93:7000/api/enterprise/${enterpriseId}`)
-        console.log()
+        console.log(enterprise?.data?.data?.tenure)
         const tenure=enterprise?.data?.data?.tenure/12;
         console.log("tenure is ",tenure)
         let domesticRevenue=calculatePercentage(financialDataObj.domesticRevenue || 0);
