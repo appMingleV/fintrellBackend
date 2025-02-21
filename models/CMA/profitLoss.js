@@ -19,7 +19,7 @@ const FinancialDataSchema = new mongoose.Schema({
         totalCost:{
             type:Number,
             default:function(){
-                let sum=(this.openingStock+this.purchases+this.labourAndTransport+this.powerAndFuel+this.otherPriceCost+this.closingStock+this.indirectExpenses);
+                let sum=+(this.openingStock+this.purchases+this.labourAndTransport+this.powerAndFuel+this.otherPriceCost+this.closingStock+this.indirectExpenses);
                 return sum;
             }
         }
@@ -27,14 +27,14 @@ const FinancialDataSchema = new mongoose.Schema({
     grossProfit:{
         type:Number,
         default:function(){
-            let sum=this.domesticRevenue+this.otherIncome;
-             return sum-this.cost.totalCost;
+            let sum=+(this.domesticRevenue+this.otherIncome);
+             return +(sum-this.cost.totalCost);
         }
     },
     EBITDA:{
         type:Number,
         default:function(){
-            let sum=this.grossProfit-this.cost.indirectExpenses
+            let sum=+(this.grossProfit-this.cost.indirectExpenses)
             return sum;
         }
     },
