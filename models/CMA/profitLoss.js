@@ -1,59 +1,64 @@
 import mongoose from "mongoose";
 
 const FinancialDataSchema = new mongoose.Schema({
-    domesticRevenue: { type: Number, required: true }, // Domestic Revenue
-    otherIncome: { type: Number, required: true },     // Other Income
-   enterpriseId:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Enterprise',
-    required: [true,"enterprise id is required"],
-  },
+    domesticRevenue: { type: Number, required: true, default: 0 }, // Domestic Revenue
+    otherIncome: { type: Number, required: true, default: 0 },     // Other Income
+    enterpriseId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Enterprise',
+        required: [true, "enterprise id is required"],
+    },
     cost: {
-        openingStock: { type: Number, required: true },       // Opening Stock
-        purchases: { type: Number, required: true },          // Purchases
-        labourAndTransport: { type: Number, required: true }, // Labour and Transport
-        powerAndFuel: { type: Number, required: true },       // Power and Fuel
-        otherPriceCost: { type: Number, required: true },     // Other Price Cost
-        closingStock: { type: Number, required: true },       // Closing Stock
-        indirectExpenses: { type: Number, required: true },   // Indirect Expenses
-        totalCost:{
-            type:Number,
-            default:function(){
-                let sum=+(this.openingStock+this.purchases+this.labourAndTransport+this.powerAndFuel+this.otherPriceCost+this.closingStock+this.indirectExpenses);
-                return sum;
+        openingStock: { type: Number, required: true, default: 0 },       // Opening Stock
+        purchases: { type: Number, required: true, default: 0 },          // Purchases
+        labourAndTransport: { type: Number, required: true, default: 0 }, // Labour and Transport
+        powerAndFuel: { type: Number, required: true, default: 0 },       // Power and Fuel
+        otherPriceCost: { type: Number, required: true, default: 0 },     // Other Price Cost
+        closingStock: { type: Number, required: true, default: 0 },       // Closing Stock
+        indirectExpenses: { type: Number, required: true, default: 0 },   // Indirect Expenses
+        totalCost: {
+            type: Number,
+            default: function () {
+                return (
+                    (this.openingStock || 0) +
+                    (this.purchases || 0) +
+                    (this.labourAndTransport || 0) +
+                    (this.powerAndFuel || 0) +
+                    (this.otherPriceCost || 0) +
+                    (this.closingStock || 0) +
+                    (this.indirectExpenses || 0)
+                );
             }
         }
     },
-    grossProfit:{
-        type:Number,
-        default:function(){
-            let sum=+(this.domesticRevenue+this.otherIncome);
-             return +(sum-this.cost.totalCost);
+    grossProfit: {
+        type: Number,
+        default: function () {
+            const revenue = (this.domesticRevenue || 0) + (this.otherIncome || 0);
+            return revenue - (this.cost?.totalCost || 0);
         }
     },
-    EBITDA:{
-        type:Number,
-        default:function(){
-            let sum=+(this.grossProfit-this.cost.indirectExpenses)
-            return sum;
+    EBITDA: {
+        type: Number,
+        default: function () {
+            return (this.grossProfit || 0) - (this.cost?.indirectExpenses || 0);
         }
     },
-    otherIncomeEBI:{
-        type:Number,
-        default:0
+    otherIncomeEBI: {
+        type: Number,
+        default: 0
     },
-    
     interestAndFinancialCharge: {
-        cashCredit: { type: Number, required: true }, // Cash Credit
-        termLoan: { type: Number, required: true },   // Term Loan
-        existingLoan: { type: Number, required: true }, // Existing Loan
-        Depreciation:{type:Number,required: true},
-        profitBeforeTax:{type:Number,required: true},
-        provisionIncomeTax:{type:Number,required: true},
-        profitAfterTax:{type:Number,required: true}
+        cashCredit: { type: Number, required: true, default: 0 }, // Cash Credit
+        termLoan: { type: Number, required: true, default: 0 },   // Term Loan
+        existingLoan: { type: Number, required: true, default: 0 }, // Existing Loan
+        Depreciation: { type: Number, required: true, default: 0 },
+        profitBeforeTax: { type: Number, required: true, default: 0 },
+        provisionIncomeTax: { type: Number, required: true, default: 0 },
+        profitAfterTax: { type: Number, required: true, default: 0 }
     }
 }, { timestamps: true });
 
 const FinancialData = mongoose.model('FinancialData', FinancialDataSchema);
 
-export default  FinancialData;
+export default FinancialData;

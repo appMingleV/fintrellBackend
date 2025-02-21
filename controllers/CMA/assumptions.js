@@ -225,12 +225,14 @@ export const addFinancialData = async (req, res) => {
         const {enterpriseId}=req.body;
         const financialDataObj = { ...req.body };
 
-        const finanicalCalculation=await calculateProfitLoss(enterpriseId,financialDataObj);
-        console.log(finanicalCalculation)
+        
+        
         const financialData = await FinancialData.findOne({enterpriseId});
-
+       
         if(!financialData){
+            console.log("check this")
             const newDataFinancialData=await FinancialData.create({...financialDataObj});
+            
             if(!newDataFinancialData){
                 return res.status(500).json({
                     success: false,

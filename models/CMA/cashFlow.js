@@ -57,7 +57,7 @@ const cashFlowSchema = new mongoose.Schema({
   netIncreaseInCashEquivalentSAtEnd:{
     type:Number,
     default:function(){
-      return  this.cashEquivalentsAtBeginning+ this.cashEquivalentsAtEnd;
+      return  (this.cashEquivalentsAtBeginning||0)+ (this.cashEquivalentsAtEnd||0);
     }
   }                                                         
 });

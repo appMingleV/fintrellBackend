@@ -29,7 +29,7 @@ const currentRatioSchema = new mongoose.Schema({
     currentRatio: {
         type: Number,
         default: function () {
-            return this.currentAssets.totalCurrentAssets / this.currentLiabilities.totalCurrentLiabilities || 0;
+            return ((this.currentAssets.totalCurrentAssets||0) / this.currentLiabilities.totalCurrentLiabilities) || 0;
         }
     },
 
