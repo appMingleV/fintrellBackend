@@ -497,7 +497,7 @@ export const getCashFlow = async (req, res) => {
         const cashFlowData = await CashFlow.findOne({ enterpriseId });
 
         if (!cashFlowData) {
-            return res.status(404).json({
+            return res.status(200).json({
                 success: false,
                 error: "Cash flow data not found",
             });
