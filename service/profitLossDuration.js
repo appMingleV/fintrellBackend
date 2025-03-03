@@ -2,13 +2,23 @@ import axios from "axios";
 
 export const calculateProfitLoss=async(enterpriseId,financialDataObj)=>{
     try{
-        console.log("financial object  is   ",financialDataObj);
+      
         const enterprise=await axios.get(`http://46.202.164.93:7000/api/enterprise/${enterpriseId}`)
-        console.log(enterprise?.data?.data?.tenure)
+        const termLoanresponse=await axios.get(`http://46.202.164.93:7000/api/cma/emiCalc/${enterpriseId}`)
+        const assuptionResponse=await axios.get(`http://46.202.164.93:7000/api/cma/assumption/${enterpriseId}`);
+        const depreciationResponse=await axios.get(`http://46.202.164.93:7000/api/cma/depreciation/${enterpriseId}`)
+        
+        // console.log(termLoanresponse?.data?.data);
+        const dataAssum=assuptionResponse?.data?.data
+        const dataTermLoan=termLoanresponse?.data?.data;
+        const dataDepreciation=depreciationResponse?.data?.data;
+
+        const split=+dataAssum?.disbursementMonthYear?.split("-")[1];
+        const startingTermYear=split>=4?(12-split+4):4-split;
         const tenure=enterprise?.data?.data?.tenure/12;
-        console.log("tenure is ",tenure)
+        
         let domesticRevenue=calculatePercentage(financialDataObj.domesticRevenue || 0);
-        console.log("domestic", domesticRevenue);
+        
         const arrayData=[];
         
         // openingStock: 100,
@@ -39,69 +49,132 @@ export const calculateProfitLoss=async(enterpriseId,financialDataObj)=>{
         //   profitAfterTax: 250
         // }
         let objetPrevious={
-            otherIncome: financialDataObj.otherIncome,
+            domesticRevenue:financialDataObj.domesticRevenue,
+            otherIncome: financialDataObj.otherIncome || 0,
             cost: {
-              openingStock: financialDataObj.cost.openingStock,
-              purchases: financialDataObj.cost.purchases,
-              labourAndTransport: financialDataObj.cost.labourAndTransport,
-              powerAndFuel:financialDataObj.cost.powerAndFuel,
-              otherPriceCost: financialDataObj.cost.otherPriceCost,
-              closingStock:financialDataObj.cost.closingStock,
-              indirectExpenses:financialDataObj.cost.indirectExpenses,
+              openingStock: financialDataObj.cost.openingStock || 0,
+              purchases: financialDataObj.cost.purchases || 0,
+              labourAndTransport: financialDataObj.cost.labourAndTransport || 0,
+              powerAndFuel:financialDataObj.cost.powerAndFuel || 0,
+              otherPriceCost: financialDataObj.cost.otherPriceCost || 0,
+              closingStock:financialDataObj.cost.closingStock || 0,
+              indirectExpenses:financialDataObj.cost.indirectExpenses || 0,
             },
-            otherIncomeEBI: financialDataObj.otherIncomeEBI,
+            otherIncomeEBI: financialDataObj.otherIncomeEBI || 0,
+            grossProfit: financialDataObj.grossProfit,
+            EBITDA: financialDataObj.EBITDA,
             interestAndFinancialCharge: {
-              cashCredit: financialDataObj.cashCredit,
-              termLoan:financialDataObj.termLoan,
-              existingLoan: financialDataObj.existingLoan,
-              Depreciation: financialDataObj.depreciation,
-              profitBeforeTax: financialDataObj.profitBeforeTax,
-              provisionIncomeTax:financialDataObj.provisionIncomeTax,
-              profitAfterTax: financialDataObj.profitAfterTax,
+              cashCredit: financialDataObj?.interestAndFinancialCharge?.cashCredit || 0,
+              termLoan:financialDataObj?.interestAndFinancialCharge?.termLoan ||0 ,
+              existingLoan: financialDataObj?.interestAndFinancialCharge?.existingLoan || 0,
+              Depreciation: financialDataObj?.interestAndFinancialCharge?.depreciation || 0,
+              profitBeforeTax: financialDataObj?.interestAndFinancialCharge?.profitBeforeTax || 0,
+              provisionIncomeTax:financialDataObj?.interestAndFinancialCharge?.provisionIncomeTax || 0,
+              profitAfterTax: financialDataObj?.interestAndFinancialCharge?.profitAfterTax || 0,
             }
         }
         arrayData.push(objetPrevious);
-        for(let i=0;i<tenure;i++){
+        for(let i=1;i<tenure;i++){
+          
+           const otherIncome=objetPrevious.otherIncome || 0;
+           const openingStock=objetPrevious.cost.closingStock || 0;
+           const purchases=+((domesticRevenue*65)/100).toFixed(2)  || 0;
+           const labourAndTransport=+((domesticRevenue*12)/100).toFixed(2) || 0;
+           const powerAndFuel=+((domesticRevenue*2)/100).toFixed(2) || 0;
+           const otherPriceCost=+((domesticRevenue*4)/100).toFixed(2) || 0;
+           const closingStock=+((domesticRevenue*60)/365).toFixed(2) || 0
+           const indirectExpenses=+((domesticRevenue*12)/100).toFixed(2) || 0; 
+           const grossProfit=calculateGrossProfit(domesticRevenue,otherIncome,openingStock,purchases,labourAndTransport,powerAndFuel,otherPriceCost)
+           console.log(domesticRevenue,grossProfit);
+           const EBITDA=calculateEBITDA(grossProfit,indirectExpenses)
+           const otherIncomeEBI=objetPrevious.otherIncome || 0
+           const cashCredit= objetPrevious.interestAndFinancialCharge.cashCredit || 0;
+           const termLoan=dataTermLoan[startingTermYear+12].Repayment || 0
+           const existingLoan=objetPrevious.interestAndFinancialCharge.existingLoan || 0;
+           const Depreciation=calculateDepreciton(dataDepreciation[i]) || 0;
+           console.log(Depreciation);
+           const profitBeforeTax=(Depreciation+termLoan+cashCredit+existingLoan) || 0;
+           const provisionIncomeTax=profitBeforeTax*0.20 || 0;
+           const profitAfterTax=(profitBeforeTax-provisionIncomeTax) || 0 
+          //  const termLoan  
            const newObject={
-            otherIncome: objetPrevious.otherIncome,
+            domesticRevenue,
+            otherIncome: otherIncome ,
             cost: {
-              openingStock: objetPrevious.cost.closingStock,
-              purchases: ((domesticRevenue*65)/100).toFixed(2),
-              labourAndTransport: ((domesticRevenue*12)/100).toFixed(2),
-              powerAndFuel:((objetPrevious.cost.powerAndFuel*2/100)).toFixed(2),
-              otherPriceCost: ((objetPrevious.cost.otherPriceCost*4)/100).toFixed(2),
-              closingStock:((objetPrevious.cost.closingStock*60)/100).toFixed(2),
-              indirectExpenses:((objetPrevious.cost.indirectExpenses*12)/100).toFixed(2),
+              openingStock: +openingStock,
+              purchases: +purchases,
+              labourAndTransport: +labourAndTransport,
+              powerAndFuel:+powerAndFuel,
+              otherPriceCost: +otherPriceCost,
+              closingStock:+closingStock,
+              indirectExpenses:+indirectExpenses,
             },
-            grossProfit:()=>{
-                  const sum=domesticRevenue+this.otherIncome;
-                  let sumCost=this.objetPrevious.cost.openingStock+this.objetPrevious.cost.purchases+this.objetPrevious.cost.labourAndTransport+this.objetPrevious.cost.powerAndFuel;
-                  return (this.objetPrevious.cost.closingStock+sum)-sumCost;
-            },
-            EBITDA:function(){
-                return  domesticRevenue.EBITDA-this.indirectExpenses
-            },
-            otherIncomeEBI: objetPrevious.otherIncomeEBI,
+            grossProfit:+grossProfit,
+            EBITDA:+EBITDA,
+            otherIncomeEBI: +otherIncomeEBI*1.1,
             interestAndFinancialCharge: {
-              cashCredit: objetPrevious.cashCredit,
-              termLoan:objetPrevious.termLoan,
-              existingLoan: objetPrevious.existingLoan,
-              Depreciation: objetPrevious.depreciation,
-              profitBeforeTax: objetPrevious.profitBeforeTax,
-              provisionIncomeTax:objetPrevious.provisionIncomeTax,
-              profitAfterTax: objetPrevious.profitAfterTax,
+              cashCredit: +cashCredit,
+              termLoan:+termLoan,
+              existingLoan: +existingLoan,
+              Depreciation: +Depreciation,
+              profitBeforeTax: +profitBeforeTax,
+              provisionIncomeTax:+provisionIncomeTax,
+              profitAfterTax:+profitAfterTax,
             }
            }
+           arrayData.push(newObject);
 
+          objetPrevious={
+            otherIncome: +newObject.otherIncome || 0,
+            cost: {
+              openingStock: +newObject.cost.openingStock || 0,
+              purchases: +newObject.cost.purchases || 0,
+              labourAndTransport: +newObject.cost.labourAndTransport || 0,
+              powerAndFuel:+newObject.cost.powerAndFuel || 0 ,
+              otherPriceCost: +newObject.cost.otherPriceCost || 0,
+              closingStock: +newObject.cost.closingStock || 0,
+              indirectExpenses:+newObject.cost.indirectExpenses || 0,
+            },
+            otherIncomeEBI: +newObject.otherIncomeEBI || 0,
+            interestAndFinancialCharge: {
+              cashCredit: +newObject.interestAndFinancialCharge.cashCredit || 0,
+              termLoan:+newObject.interestAndFinancialCharge.termLoan ||0 ,
+              existingLoan: +newObject.interestAndFinancialCharge.existingLoan || 0,
+              Depreciation: +newObject.interestAndFinancialCharge.Depreciation || 0,
+              profitBeforeTax: +newObject.interestAndFinancialCharge.profitBeforeTax || 0,
+              provisionIncomeTax:+newObject.interestAndFinancialCharge.provisionIncomeTax || 0,
+              profitAfterTax: +newObject.interestAndFinancialCharge.profitAfterTax || 0,
+            }
         }
+        domesticRevenue=calculatePercentage(domesticRevenue);
+        }
+
+         console.log(arrayData)
         return "now is pending"
      
     }catch(err){
+      console.log(err);
         return undefined;
     }
 }
+function calculateGrossProfit(domesticRevenue,otherIncome,openingStock,purchases,labourAndTransport,powerAndFuel,closingStock,otherPriceCost){
+    const sum=domesticRevenue+(otherIncome || 0);
+    let sumCost=(openingStock || 0)+(purchases || 0)+(labourAndTransport|| 0)+(powerAndFuel ||0 )+(otherPriceCost || 0);
+    return ((closingStock || 0)+sum)-sumCost;
+}
 
+function calculateDepreciton(depreciation){
+   let sumDep=0;
+   for(let  key in  depreciation){
+       sumDep+=depreciation[key].dep || 0;
+   }  
+   return sumDep;
+}
+function calculateEBITDA(grossProfit,indirectExpenses){
+  return  (grossProfit || 0)-(indirectExpenses || 0)
+}
 
 function calculatePercentage(val){
-     return val*1.15
+     const domestic=+(val*0.15);
+     return +(val+domestic).toFixed(2);
 }

@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {addAssumption,getAssumptions,addCostOfProject,getCostOfProject,addMeansOfFinance,getMeansOfFinance,addFinancialData,getFinancialData,breakEvenPoint,indrectExpensses,getIndirectExpenses,cashFlow,getCashFlow} from '../../controllers/CMA/assumptions.js'
+import {addAssumption,getAssumptions,addCostOfProject,getCostOfProject,addMeansOfFinance,getMeansOfFinance,addFinancialData,getFinancialData,breakEvenPoint,indrectExpensses,getIndirectExpenses,cashFlow,getCashFlow,createOrUpdateFormData,getFormData} from '../../controllers/CMA/assumptions.js'
 import {depCalc,EMICalcu} from '../../controllers/CMA/calculation.js'
 
 import cma2 from './otherCma.js'
@@ -32,9 +32,12 @@ router.get('/indirectExpenses/:enterpriseId',getIndirectExpenses);
 router.post('/cashflow/:enterpriseId',cashFlow);
 router.get('/cashflow/:enterpriseId',getCashFlow);
 
-
+router.post('/cma/:enterpriseId',createOrUpdateFormData)
+router.get('/cma/:enterpriseId',getFormData)
 
 router.get('/depreciation/:enterpriseId',depCalc)
 router.get('/emiCalc/:enterpriseId',EMICalcu)
+
+
 
 export default router;

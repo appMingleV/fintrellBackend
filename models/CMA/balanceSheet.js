@@ -8,8 +8,8 @@ const balanceSheetSchema = new mongoose.Schema({
 },
   liabilities: {
     debtLiabilities: {
-        debtLiabilities:{type:Number,required:[true,"Enter a debt Liabilities "]},
-      existingLoans: {type:Number,required:[true,"Enter a existing Loans "]},
+      debtLiabilities:{type:Number,required:[true,"Enter a debt Liabilities"]},
+      existingLoans: {type:Number,required:[true,"Enter a existing Loans"]},
       totalSecuredLoans: Number,
       unsecuredLoans: Number,
       governmentFunds: Number,

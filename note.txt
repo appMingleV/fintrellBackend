@@ -1,0 +1,15 @@
+
+
+    const purchases = (domesticRevenue * 65) / 100; //27 
+    const labourAndTransport = (domesticRevenue * 12) / 100;
+    const powerAndFuel = (domesticRevenue * 2) / 100;
+    const otherPrimeCost = (domesticRevenue * 4) / 100;
+    const closingStock = +((domesticRevenue * 60) / 365).toFixed(2);
+    const indirectExpenses = (domesticRevenue * 12) / 100;
+    const grossProfit =+((afterOtherIcomeDomesticRevenue+closingStock) - (purchases + openingStock + labourAndTransport + powerAndFuel + otherPrimeCost)).toFixed(2);
+    const EBITDA = (grossProfit - indirectExpenses).toFixed(2);
+    const totalB = cashCredit + termLoan + formData.existingLoan + depreciation
+    
+    const profitBeforeTax = +(EBITDA - totalB).toFixed(2);
+    const provisionforIncomeTax = +((profitBeforeTax * 30) / 100).toFixed(2);
+    const profitafterTax = +(profitBeforeTax - provisionforIncomeTax).toFixed(2);

@@ -8,6 +8,7 @@ import CashFlow from "../../models/CMA/cashFlow.js";
 import BalanceSheet from "../../models/CMA/balanceSheet.js";
 import CurrentRatio from "../../models/CMA/currentRatio.js";
 import sensitive from "../../models/CMA/sensitivity.js";
+import FormData from '../../models/CMA/cma.js'
 import {calculateProfitLoss} from "../../service/profitLossDuration.js"
 export const addAssumption=async(req,res)=>{
     try{
@@ -225,7 +226,7 @@ export const addFinancialData = async (req, res) => {
         const {enterpriseId}=req.body;
         const financialDataObj = { ...req.body };
 
-        
+        await calculateProfitLoss(enterpriseId,financialDataObj)
         
         const financialData = await FinancialData.findOne({enterpriseId});
        
@@ -728,3 +729,78 @@ export const getSensitiveAnalysis=async(req,res)=>{
         })
     }
 }
+
+
+
+
+export const createOrUpdateFormData = async (req, res) => {
+    try {
+        const { enterpriseId } = req.params;
+        const formDataObj = { ...req.body };
+
+        const existingData = await FormData.findOne({ enterpriseId });
+        
+        if (!existingData) {
+            const newFormData = await FormData.create({ enterpriseId, ...formDataObj });
+            if (!newFormData) {
+                return res.status(500).json({
+                    success: false,
+                    error: 'Failed to create form data',
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'Form data created successfully',
+                data: newFormData,
+            });
+        } else {
+            const updatedFormData = await FormData.findOneAndUpdate(
+                { enterpriseId },
+                { ...formDataObj },
+                { new: true }
+            );
+            if (!updatedFormData) {
+                return res.status(500).json({
+                    success: false,
+                    error: 'Failed to update form data',
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'Form data successfully updated',
+                data: updatedFormData,
+            });
+        }
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: 'Failed to process form data',
+            message: err.message,
+        });
+    }
+};
+
+// Get FormData by Enterprise ID
+export const getFormData = async (req, res) => {
+    try {
+        const { enterpriseId } = req.params;
+        const formData = await FormData.findOne({ enterpriseId });
+
+        if (!formData) {
+            return res.status(404).json({
+                success: false,
+                message: 'Form data not found',
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: formData,
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: 'Failed to retrieve form data',
+            message: err.message,
+        });
+    }
+};
