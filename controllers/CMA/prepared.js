@@ -7,7 +7,7 @@ export const createPrepared = async (req, res) => {
         return res.status(400).json({ message: "All fields are required" });
       }
   
-      const newPrepared = new Prepared({ enterpriseId, preparedBy, mobile, address });
+      const newPrepared = await Prepared.create({ enterpriseId, preparedBy, mobile, address });
       await newPrepared.save();
   
       res.status(201).json({ success: true, message: "Prepared record created successfully", data: newPrepared });
