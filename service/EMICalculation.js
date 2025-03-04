@@ -40,7 +40,7 @@ function calculate(Repayment,tenure,startDate,termLoan,roi){
     let month=+date[1];
     const year=+date[0]; 
     let duration=tenure/12;
-    console.log(month," ",year," ",date," ",duration);
+    console.log(month," ",year," ",date," ",duration,termLoan,Repayment);
     const calculObj=[];
     const interest=calculateInteres(termLoan,roi);
     console.log("interest  ",interest);
@@ -51,7 +51,9 @@ function calculate(Repayment,tenure,startDate,termLoan,roi){
         interest:interest,
         pricipleOutstanding:termLoan-Repayment
     }
+   
     while(count!=4){
+       
         let newObje={
            principleAmount:objeStore.principleAmount,
            Repayment,
@@ -72,21 +74,21 @@ function calculate(Repayment,tenure,startDate,termLoan,roi){
     }
     let lengthObj=calculObj.length
     let remainingMonth=tenure-lengthObj;
-    
-    console.log(remainingMonth," object ",calculObj[lengthObj-1].principleAmount);
-    let pricilOutStanding=calculObj[lengthObj-1].pricipleOutstanding-Repayment;
+    console.log(remainingMonth)
+    // console.log(remainingMonth," object ",calculObj[lengthObj-1]?.principleAmount);
+    let pricilOutStanding=calculObj[lengthObj-1]?.pricipleOutstanding-Repayment;
     let  remainObj={
-            principleAmount:calculObj[lengthObj-1].pricipleOutstanding,
+            principleAmount:calculObj[lengthObj-1]?.pricipleOutstanding,
             Repayment,
-            interest:calculateInteres(calculObj[lengthObj-1].pricipleOutstanding,roi),
+            interest:calculateInteres(calculObj[lengthObj-1]?.pricipleOutstanding,roi),
             pricipleOutstanding:pricilOutStanding
     }
     while(remainingMonth>0){
         let newObje={
-            principleAmount:remainObj.principleAmount,
+            principleAmount:remainObj?.principleAmount,
             Repayment,
-            interest:remainObj.interest,
-            pricipleOutstanding:remainObj.pricipleOutstanding
+            interest:remainObj?.interest,
+            pricipleOutstanding:remainObj?.pricipleOutstanding
         }
          let priAmount=newObje.pricipleOutstanding;
          let interest=calculateInteres(priAmount,roi);
