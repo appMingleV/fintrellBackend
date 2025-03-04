@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {addAssumption,getAssumptions,addCostOfProject,getCostOfProject,addMeansOfFinance,getMeansOfFinance,addFinancialData,getFinancialData,breakEvenPoint,indrectExpensses,getIndirectExpenses,cashFlow,getCashFlow,createOrUpdateFormData,getFormData} from '../../controllers/CMA/assumptions.js'
+import {addAssumption,getAssumptions,addCostOfProject,getCostOfProject,addMeansOfFinance,getMeansOfFinance,addFinancialData,getFinancialData,breakEvenPoint,indrectExpensses,getIndirectExpenses,cashFlow,getCashFlow,createOrUpdateFormData,getFormData,tenurFinancialData} from '../../controllers/CMA/assumptions.js'
 import {depCalc,EMICalcu} from '../../controllers/CMA/calculation.js'
 
 import cma2 from './otherCma.js'
@@ -18,6 +18,7 @@ router.get('/meansOfFinance/:enterpriseId',getMeansOfFinance);
 
 router.post('/profitLoss',addFinancialData);
 router.get('/profitLoss/:enterpriseId',getFinancialData);
+router.get('/tenure/profitLoss/:enterpriseId',tenurFinancialData);
 
 //break even point-->
 router.post('/breakEvenPoint/:enterpriseId',breakEvenPoint);

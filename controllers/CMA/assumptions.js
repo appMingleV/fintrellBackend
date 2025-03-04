@@ -293,6 +293,31 @@ export const getFinancialData = async (req, res) => {
     }
 };
 
+export const tenurFinancialData=async(req,res)=>{
+               try{
+                const {enterpriseId}=req.params;
+                const financialData = await FinancialData.find({ enterpriseId });
+                
+                if (!financialData) {
+            return res.status(404).json({
+                success: false,
+                error: 'Financial data not found'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: financialData
+        });
+
+               }catch(err){
+                 return res.status(500).json({
+                     status:false,
+                     error:err.message
+                 })
+               }
+}
+
 
 export const breakEvenPoint=async(req,res)=>{
        try{
