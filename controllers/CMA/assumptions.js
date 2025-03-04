@@ -549,6 +549,7 @@ export const balanceSheet=async(req,res)=>{
             const {enterpriseId}=req.params;
             const balanceData={...req.body};
             const balanceSheetData=await BalanceSheet.findOne({enterpriseId});
+       
             if(!balanceSheetData){
                 
                 const newDataBalanceSheet=await BalanceSheet.create({enterpriseId,...balanceData});

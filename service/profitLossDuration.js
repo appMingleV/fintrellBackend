@@ -1,5 +1,5 @@
 import axios from "axios";
-import Profitloss from  '../models/CMA/profitLoss.js';
+import Profitloss from  '../models/tenure/profitloss.js';
 export const calculateProfitLoss=async(enterpriseId,financialDataObj)=>{
     try{
       
@@ -123,7 +123,7 @@ export const calculateProfitLoss=async(enterpriseId,financialDataObj)=>{
             }
            }
            arrayData.push(newObject);
-           const newFormData = await Profitloss.create({ enterpriseId, ...newObject });
+           
           objetPrevious={
             otherIncome: +newObject.otherIncome || 0,
             cost: {
@@ -150,6 +150,7 @@ export const calculateProfitLoss=async(enterpriseId,financialDataObj)=>{
         }
 
          console.log(arrayData)
+         await Profitloss.create({enterpriseId,financialData:arrayData})
         return "now is pending"
      
     }catch(err){
